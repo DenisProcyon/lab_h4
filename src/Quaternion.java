@@ -1,3 +1,6 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /** Quaternions. Basic operations. */
 public class Quaternion {
    private final double a, b, c, d;
@@ -57,8 +60,15 @@ public class Quaternion {
     */
    @Override
    public String toString() {
-
-      return String.format("%.2f + %.2fi + %.2fk + %.2fk", this.a, this.b, this.c, this.d);
+      String x, y, z, w;
+      x = String.format("%.2f", this.a);
+      y = String.format("%.2fi", this.b);
+      z = String.format("%.2fj", this.c);
+      w = String.format("%.2fk", this.d);
+      if (this.b > 0) y = "+" + y;
+      if (this.c > 0) z = "+" + z;
+      if (this.d > 0) w = "+" + w;
+      return x + y + z + w;
    }
 
    /** Conversion from the string to the quaternion. 
@@ -70,11 +80,25 @@ public class Quaternion {
     */
    public static Quaternion valueOf (String s) {
 
-      String[] parts = s.split("\\+");
-      double x = Double.parseDouble(parts[0].trim());
-      double y = Double.parseDouble(parts[1].trim().substring(0, parts[1].trim().length() - 1));
-      double z = Double.parseDouble(parts[2].trim().substring(0, parts[2].trim().length() - 1));
-      double w = Double.parseDouble(parts[3].trim().substring(0, parts[3].trim().length() - 1));
+      Pattern pattern = Pattern.compile("(-?\\d+(?:\\.\\d+)?)([ijk])?");
+      Matcher matcher = pattern.matcher(s);
+
+      double x = 0.0, y = 0.0, z = 0.0, w = 0.0;
+
+      while (matcher.find()) {
+         double value = Double.parseDouble(matcher.group(1));
+         String component = matcher.group(2);
+
+         if (component == null) {
+            x = value;
+         } else if (component.equals("i")) {
+            y = value;
+         } else if (component.equals("j")) {
+            z = value;
+         } else if (component.equals("k")) {
+            w = value;
+         }
+      }
       return new Quaternion(x, y, z, w);
    }
 
@@ -248,7 +272,7 @@ public class Quaternion {
     * @param arg command line parameters
     */
    public static void main (String[] args) {
-      System.out.println(Quaternion.valueOf("-1-2i-3j-4k"));
+      System.out.println(Quaternion.valueOf("-1-2i+3j-4k"));
    }
 
 }
