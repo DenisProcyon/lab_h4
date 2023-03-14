@@ -4,9 +4,8 @@ import java.util.regex.Pattern;
 /** Quaternions. Basic operations. */
 public class Quaternion {
    private final double a, b, c, d;
-   private final double t = 0.000001;
+   private static final double PRECISION = 0.000001;
 
-   // TODO!!! Your fields here!
 
    /** Constructor from four double values.
     * @param a real part
@@ -84,22 +83,25 @@ public class Quaternion {
       Matcher matcher = pattern.matcher(s);
 
       double x = 0.0, y = 0.0, z = 0.0, w = 0.0;
-
-      while (matcher.find()) {
-         double value = Double.parseDouble(matcher.group(1));
-         String component = matcher.group(2);
-
-         if (component == null) {
-            x = value;
-         } else if (component.equals("i")) {
-            y = value;
-         } else if (component.equals("j")) {
-            z = value;
-         } else if (component.equals("k")) {
-            w = value;
+      try {
+         while (matcher.find()) {
+            double value = Double.parseDouble(matcher.group(1));
+            String component = matcher.group(2);
+            if (component == null) {
+               x = value;
+            } else if (component.equals("i")) {
+               y = value;
+            } else if (component.equals("j")) {
+               z = value;
+            } else if (component.equals("k")) {
+               w = value;
+            }
          }
+         return new Quaternion(x, y, z, w);
+      } catch (Exception e) {
+         throw new RuntimeException("Cant extract values from this string (probably incorrect string?): " + s
+                 + "\nExpected: a(+/-)bi(+/-)cj(+/-)dk");
       }
-      return new Quaternion(x, y, z, w);
    }
 
    /** Clone of the quaternion.
@@ -114,10 +116,10 @@ public class Quaternion {
     * @return true, if the real part and all the imaginary parts are (close to) zero
     */
    public boolean isZero() {
-      boolean dr = Math.abs(this.getRpart()) < t;
-      boolean di = Math.abs(this.getIpart()) < t;
-      boolean dj = Math.abs(this.getJpart()) < t;
-      boolean dk = Math.abs(this.getKpart()) < t;
+      boolean dr = Math.abs(this.getRpart()) < PRECISION;
+      boolean di = Math.abs(this.getIpart()) < PRECISION;
+      boolean dj = Math.abs(this.getJpart()) < PRECISION;
+      boolean dk = Math.abs(this.getKpart()) < PRECISION;
       return dr && di && dj && dk;
    }
 
@@ -226,10 +228,10 @@ public class Quaternion {
    @Override
    public boolean equals (Object qo) {
       Quaternion l = (Quaternion) qo;
-      boolean dr = this.getRpart() - l.getRpart() < t;
-      boolean di = this.getIpart() - l.getIpart() < t;
-      boolean dj = this.getJpart() - l.getJpart() < t;
-      boolean dk = this.getKpart() - l.getKpart() < t;
+      boolean dr = this.getRpart() - l.getRpart() < PRECISION;
+      boolean di = this.getIpart() - l.getIpart() < PRECISION;
+      boolean dj = this.getJpart() - l.getJpart() < PRECISION;
+      boolean dk = this.getKpart() - l.getKpart() < PRECISION;
       return dr && di && dj && dk;
    }
 
