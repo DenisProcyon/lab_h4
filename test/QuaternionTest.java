@@ -38,6 +38,51 @@ public class QuaternionTest {
       assertEquals ("zero has wrong real part", 0., r, DELTA);
    }
 
+   @Test (timeout = 1000)
+   public void testPowZero() {
+      Quaternion q = new Quaternion(1, 1, 1, 1);
+      Quaternion n = new Quaternion(1, 0, 0, 0);
+
+      Quaternion result = q.pow(0);
+      assertEquals(result, n);
+   }
+
+   @Test (timeout = 1000)
+   public void testPowOne() {
+      Quaternion q = new Quaternion(5, 5, 5, 5);
+      Quaternion n = new Quaternion(5, 5, 5, 5);
+
+      Quaternion result = q.pow(1);
+      assertEquals(result, n);
+   }
+
+   @Test (timeout = 1000)
+   public void testPowMinusOne() {
+      Quaternion q = new Quaternion(1, 2, 3, 4);
+      Quaternion n = new Quaternion(1, 2, 3, 4).inverse();
+
+      Quaternion result = q.pow(-1);
+      assertEquals(result, n);
+   }
+
+   @Test (timeout = 1000)
+   public void testPowN() {
+      Quaternion q = new Quaternion(5, 5, 3, 3);
+      Quaternion n = new Quaternion(5, 5, 3, 3).times(q.pow(4));
+
+      Quaternion result = q.pow(5);
+      assertEquals(result, n);
+   }
+
+   @Test (timeout = 1000)
+   public void testPowMinusN() {
+      Quaternion q = new Quaternion(5, 5, 3, 3);
+      Quaternion n = new Quaternion(5, 5, 3, 3).pow(5).inverse();
+
+      Quaternion result = q.pow(-5);
+      assertEquals(result, n);
+   }
+
    @Test (timeout=1000)
    public void testToString() {
       String s = new Quaternion (1., 4., 5., 7.).toString();
