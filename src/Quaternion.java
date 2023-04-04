@@ -184,7 +184,8 @@ public class Quaternion {
       if (n > 1) {
          return temp;
       } else {
-         return temp.inverse();
+         temp.inverse();
+         return temp;
       }
    }
 
@@ -300,6 +301,8 @@ public class Quaternion {
     */
    public static void main (String[] args) {
       System.out.println(Quaternion.valueOf("-1-2i+3j-4k"));
+      Quaternion test = new Quaternion(4, 2, 3, 2);
+      System.out.println(test.pow(-3));
    }
 
 }
