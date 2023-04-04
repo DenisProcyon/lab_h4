@@ -163,6 +163,31 @@ public class Quaternion {
       return new Quaternion(x, y, z, w);
    }
 
+   public Quaternion pow (Integer n) {
+      Quaternion temp = new Quaternion(this.a, this.b, this.c, this.d);
+      Quaternion base = null;
+      if (n == 0) {
+         return new Quaternion(1, 0, 0, 0);
+      } else if (n == 1) {
+         return new Quaternion(this.a, this.b, this.c, this.d);
+      } else if (n == -1) {
+         return new Quaternion(this.a, this.b, this.c, this.d).inverse();
+      } else {
+         Integer b = Math.abs(n);
+         try {
+            base = (Quaternion) temp.clone();
+         } catch (CloneNotSupportedException e) {}
+         for (int i = 0; i < b; i++) {
+            temp = temp.times(base);
+         }
+      }
+      if (n > 1) {
+         return temp;
+      } else {
+         return temp.inverse();
+      }
+   }
+
    /** Multiplication by a coefficient.
     * @param r coefficient
     * @return quaternion <code>this*r</code>
